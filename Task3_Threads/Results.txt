@@ -1,0 +1,6 @@
+Proceeded files: 	12087
+Count of lines: 	2269098
+Count of comment lines: 405505
+Count of blank lines: 	317041
+Count of code lines: 	1546552
+Working time: 		13832 ms

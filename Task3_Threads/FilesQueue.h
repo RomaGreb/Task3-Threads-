@@ -9,14 +9,15 @@ namespace Threads
 
 class FilesQueue
 {
-    mutable std::mutex mtx;
-    std::queue<std::string> file_paths;
-
 public:
     FilesQueue();
     void PushToQueue(std::string path_to_file);
     std::string PopFromQueue();
-    bool QueueIsEmpty()const;
+    bool IsQueueEmpty()const;
+
+private:
+    mutable std::mutex mtx_;
+    std::queue<std::string> file_paths_;
 };
 
 }

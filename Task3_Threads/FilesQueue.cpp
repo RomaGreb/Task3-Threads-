@@ -3,30 +3,30 @@
 namespace Threads
 {
 
-FilesQueue::FilesQueue(): file_paths(),mtx()
+FilesQueue::FilesQueue(): file_paths_(),mtx_()
 {
 }
 
-bool FilesQueue::QueueIsEmpty()const
+bool FilesQueue::IsQueueEmpty()const
 {
-    std::lock_guard<std::mutex> lock(mtx);
-    return file_paths.empty();
+    std::lock_guard<std::mutex> lock(mtx_);
+    return file_paths_.empty();
 }
 
 void FilesQueue::PushToQueue(std::string path_to_file)
 {
-    std::lock_guard<std::mutex> lock(mtx);
-    file_paths.push(path_to_file);
+    std::lock_guard<std::mutex> lock(mtx_);
+    file_paths_.push(path_to_file);
 }
 
 std::string FilesQueue::PopFromQueue()
 {
-    std::unique_lock<std::mutex> lock(mtx);
+    std::unique_lock<std::mutex> lock(mtx_);
     std::string temp;
-    if(!file_paths.empty())
+    if (!file_paths_.empty())
     {
-        temp = file_paths.front();
-        file_paths.pop();
+        temp = file_paths_.front();
+        file_paths_.pop();
     }
     return temp;
 }

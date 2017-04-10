@@ -3,10 +3,9 @@
 namespace Threads
 {
 
-Info::Info(): path_to_files(),searching_files(true),proceeded_files(0)
-  ,count_of_lines(0),count_of_comment_lines(0),count_of_blank_lines(0)
-{
-}
+Info::Info()
+    : path_to_files_(),is_searching_files_(true),proceeded_files_(0)
+    ,count_of_lines_(0),count_of_comment_lines_(0),count_of_blank_lines_(0) {}
 
 void Info::SearchFiles(boost::filesystem::path path_to_root_folder)
 {
@@ -17,50 +16,50 @@ void Info::SearchFiles(boost::filesystem::path path_to_root_folder)
     {
         std::string ext_files = root_folder->path().extension().string();
         temp_path = root_folder->path().string();
-        if((ext_files == ".cpp")||(ext_files == ".c")||(ext_files == ".hpp")||(ext_files == ".h"))
+        if ((ext_files == ".cpp")||(ext_files == ".c")||(ext_files == ".hpp")||(ext_files == ".h"))
         {
-            path_to_files.PushToQueue(temp_path);
+            path_to_files_.PushToQueue(temp_path);
         }
         ++root_folder;
     }
-    searching_files = false;
+    is_searching_files_ = false;
 }
 
 void Info::ParseFile()
 {
-    while(!path_to_files.QueueIsEmpty() || searching_files)
+    while(!path_to_files_.IsQueueEmpty() || is_searching_files_)
     {
-        std::string copy_file_path = path_to_files.PopFromQueue();
-        if(copy_file_path.empty())
+        std::string copy_file_path = path_to_files_.PopFromQueue();
+        if (copy_file_path.empty())
             continue;
-        ++proceeded_files;
+        ++proceeded_files_;
         std::ifstream parse_file;
         parse_file.open(copy_file_path);
-        if(!parse_file.is_open())
+        if (!parse_file.is_open())
         {
             std::cout << "Cannot open file: " << copy_file_path << std::endl;
             continue;
         }
         std::string line = "";
-        bool multi_line_comment = false;
+        bool is_multi_line_comment = false;
         while(std::getline(parse_file,line))
         {
-            ++count_of_lines;
+            ++count_of_lines_;
             line.erase(std::remove_if(line.begin(),line.end(),isspace), line.end());
             if(line.empty())
-                ++count_of_blank_lines;
-            else if(line.substr(0,2) == "//")
-                ++count_of_comment_lines;
-            else if(line.substr(0,2)== "/*")
+                ++count_of_blank_lines_;
+            else if (line.substr(0,2) == "//")
+                ++count_of_comment_lines_;
+            else if (line.substr(0,2)== "/*")
             {
-                multi_line_comment = true;
-                ++count_of_comment_lines;
+                is_multi_line_comment = true;
+                ++count_of_comment_lines_;
             }
-            else if(multi_line_comment)
+            else if (is_multi_line_comment)
             {
-                ++count_of_comment_lines;
-                if(std::string::npos != line.find("*/"))
-                    multi_line_comment = false;
+                ++count_of_comment_lines_;
+                if (std::string::npos != line.find("*/"))
+                    is_multi_line_comment = false;
             }
         }
         parse_file.close();
@@ -69,11 +68,12 @@ void Info::ParseFile()
 
 void Info::RecordResults(std::ostream& os)
 {
-    os << "Proceeded files: " << '\t' << proceeded_files << std::endl;
-    os << "Count of lines: " << '\t' <<count_of_lines << std::endl;
-    os << "Count of comment lines: " << count_of_comment_lines << std::endl;
-    os << "Count of blank lines: " << '\t' << count_of_blank_lines << std::endl;
-    os << "Count of code lines: " << '\t' << count_of_lines - count_of_comment_lines - count_of_blank_lines << std::endl;
+    os << "Proceeded files: " << '\t' << proceeded_files_ << std::endl;
+    os << "Count of lines: " << '\t' <<count_of_lines_ << std::endl;
+    os << "Count of comment lines: " << count_of_comment_lines_ << std::endl;
+    os << "Count of blank lines: " << '\t' << count_of_blank_lines_ << std::endl;
+    os << "Count of code lines: " << '\t'
+    << count_of_lines_ - count_of_comment_lines_ - count_of_blank_lines_ << std::endl;
     os << "Working time: " << "\t\t" << work_time << " ms" << std::endl;
 }
 

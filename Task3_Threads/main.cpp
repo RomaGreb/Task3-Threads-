@@ -1,7 +1,7 @@
+#include"WorkWithFiles.h"
 #include<thread>
 #include<chrono>
 #include<vector>
-#include"WorkWithFiles.h"
 
 using namespace Threads;
 
@@ -29,7 +29,7 @@ int main()
 
     std::cout << "vector filled " << num_of_threads.size() << std::endl;
 
-    if(search_files.joinable())
+    if (search_files.joinable())
         search_files.join();
     else
         std::cout << "Cannot join thread" << std::endl;
@@ -39,7 +39,7 @@ int main()
 
     for(unsigned int j = 0; j < num_of_threads.size(); ++j)
     {
-        if(num_of_threads[j].joinable())
+        if (num_of_threads[j].joinable())
             num_of_threads[j].join();
         else
             std::cout << "Cannot join parese threads";
@@ -51,11 +51,12 @@ int main()
 
     std::cout << "clock finished" << std::endl;
 
-    info.work_time = std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count() / CLOCKS_PER_SEC;
+    info.work_time = std::chrono::duration_cast<std::chrono::microseconds>
+    (finish - start).count() / CLOCKS_PER_SEC;
 
     std::ofstream results;
     results.open("E:\\Results.txt");
-    if(!results.is_open())
+    if (!results.is_open())
     {
         std::cout << "Error! Cannot open file for writting" << std::endl;
         return -1;

@@ -15,14 +15,17 @@ int main()
     std::vector<std::thread> num_of_threads;
     Info info;
 
+    auto search = std::bind(&Info::SearchFiles,std::ref(info),root_folder);
+    auto parse = std::bind(&Info::ParseFile,std::ref(info));
+
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     std::cout << "clock started" << std::endl;
-    std::thread search_files(SearchFiles,root_folder,std::reference_wrapper<Info>(info));
+    std::thread search_files(search);
     std::cout << "thread created" << std::endl;
 
 
     for(unsigned int i = 0; i < (maximum_threads/2+0.5); ++i)
-        num_of_threads.emplace_back(std::thread(ParseFile,std::ref(info)));
+        num_of_threads.emplace_back(std::thread(parse));
 
     std::cout << "vector filled " << num_of_threads.size() << std::endl;
 
@@ -59,7 +62,7 @@ int main()
     }
     else
     {
-        RecordResults(info, results);
+        info.RecordResults(results);
         results.close();
     }
 

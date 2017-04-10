@@ -3,7 +3,7 @@
 namespace Threads
 {
 
-FilesQueue::FilesQueue(): file_paths(),mtx(),con_var()
+FilesQueue::FilesQueue(): file_paths(),mtx()
 {
 }
 
@@ -17,7 +17,6 @@ void FilesQueue::PushToQueue(std::string path_to_file)
 {
     std::lock_guard<std::mutex> lock(mtx);
     file_paths.push(path_to_file);
-    con_var.notify_one();
 }
 
 std::string FilesQueue::PopFromQueue()

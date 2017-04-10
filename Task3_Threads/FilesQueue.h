@@ -10,7 +10,6 @@ namespace Threads
 class FilesQueue
 {
     mutable std::mutex mtx;
-    std::condition_variable con_var;
     std::queue<std::string> file_paths;
 
 public:

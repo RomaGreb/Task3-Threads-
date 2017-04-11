@@ -42,7 +42,7 @@ int main()
         if (num_of_threads[j].joinable())
             num_of_threads[j].join();
         else
-            std::cout << "Cannot join parese threads";
+            std::cout << "Cannot join parse threads";
     }
 
     std::cout << "parse threads joined" << std::endl;
